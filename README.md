@@ -19,7 +19,7 @@ This repository holds the code of DrugChat: Towards Enabling ChatGPT-Like Capabi
 
 ## Datasets
 
-The file data/ChEMBL_QA.json and data/PubChem_QA.json contains data for the ChEMBL Drug QA Dataset and the PubChem Drug QA Dataset. The data structure is as follows. 
+The file data/ChEMBL_QA.json and data/PubChem_QA.json contains data for the ChEMBL Drug Instruction Tuning Dataset and the PubChem Drug Instruction Tuning Dataset. The data structure is as follows. 
 
 {SMILES String: [ [Question1 , Answer1], [Question2 , Answer2]... ] }
 
@@ -28,3 +28,15 @@ The file data/ChEMBL_QA.json and data/PubChem_QA.json contains data for the ChEM
 This is a prototype system that has not been systematically and comprehensively validated by pharmaceutical experts yet. Please use with caution. 
 
 Trained models and demo websites will be released after we thoroughly validate the system with pharmaceutical experts.
+
+## Citation
+
+If you're using DrugChat in your research or applications, please cite using this BibTeX:
+```bibtex
+@article{liang2023drugchat,
+  title={DrugChat: Towards Enabling ChatGPT-Like Capabilities on Drug Molecule Graphs},
+  author={Liang, Youwei and Zhang, Ruiyi and Zhang, li and Xie, Pengtao},
+  journal={arXiv preprint arXiv:xxxx.xxxxx},
+  year={2023}
+}
+```
