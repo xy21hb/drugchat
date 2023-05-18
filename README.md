@@ -19,7 +19,7 @@ This repository holds the code of DrugChat: Towards Enabling ChatGPT-Like Capabi
 
 ## Datasets
 
-The file data/ChEMBL_QA.json and data/PubChem_QA.json contains data for the ChEMBL Drug Instruction Tuning Dataset and the PubChem Drug Instruction Tuning Dataset. The data structure is as follows. 
+The file `data/ChEMBL_QA.json` and `data/PubChem_QA.json` contains data for the ChEMBL Drug Instruction Tuning Dataset and the PubChem Drug Instruction Tuning Dataset. The data structure is as follows. 
 
 {SMILES String: [ [Question1 , Answer1], [Question2 , Answer2]... ] }
 
@@ -63,7 +63,8 @@ Then, set the path to the vicuna weight in the model config file
 Start training the projection layer that connects the GNN output and the LLaMA model by running `bash finetune_gnn.sh`. 
 
 ### Inference by Launching Demo Locally
-**To get the inference work properly, you need to create another environment (`rdkit`) and launch a backend process which converts SMILES strings to Torch Geometric graphs.**
+**To get the inference to work properly, you need to create another environment (`rdkit`) and launch a backend process which converts SMILES strings to Torch Geometric graphs.**
+
 To create the `rdkit` environment and run the process, run
 ```
 conda create -c conda-forge -n rdkit rdkit
@@ -71,7 +72,7 @@ conda activate rdkit
 pip install numpy
 python dataset/smiles2graph_demo.py
 ```
-Then, the `smiles2graph_demo.py` will be running to serve the `demo.py`.
+Then, the `smiles2graph_demo.py` will be running in the backend to serve the `demo.py`.
 
 Now we launch the `demo.py` in our original environment. Make sure you have run `conda activate drugchat`. Then, start the demo [demo.sh](demo.sh) on your local machine by running `bash demo.sh`. Then, open the URL created by the demo and try it out!
 
