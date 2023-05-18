@@ -3,10 +3,9 @@
 This repository holds the code of DrugChat: Towards Enabling ChatGPT-Like Capabilities on Drug Molecule Graphs.
 
 ## Examples
-  |   |   |
-:-------------------------:
+
 ![demo1](figs/examples/demo.png) 
-![demo2](figs/examples/demo2.png)
+
 
 ## Introduction
 - In this work, we make an initial attempt towards enabling ChatGPT-like capabilities on drug molecule graphs, by developing a prototype system DrugChat.
