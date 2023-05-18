@@ -60,6 +60,8 @@ Then, set the path to the vicuna weight in the model config file
 [here](pipeline/configs/models/drugchat.yaml#L16) at Line 16.
 
 ### Training
+The training configuration file is [train_configs/drugchat_stage2_finetune.yaml](train_configs/drugchat_stage2_finetune.yaml). You may want to change the number of epochs and other hyper-parameters there, such as `max_epoch`, `init_lr`, `min_lr`,`warmup_steps`, `batch_size_train`. You need to adjust `iters_per_epoch` so that `iters_per_epoch` * `batch_size_train` = your training set size.
+
 Start training the projection layer that connects the GNN output and the LLaMA model by running `bash finetune_gnn.sh`. 
 
 ### Inference by Launching Demo Locally
@@ -74,7 +76,7 @@ python dataset/smiles2graph_demo.py
 ```
 Then, the `smiles2graph_demo.py` will be running in the backend to serve the `demo.py`.
 
-Find the checkpoint you obtain from the training process above, which is located under the folder `pipeline/output/pipeline_stage2_finetune/`. Copy it to the folder `ckpt` by running `cp pipeline/output/pipeline_stage2_finetune/the_remaining_path ckpt/with_gnn_node_feat.pth`.
+Find the checkpoint you save in the training process above, which is located under the folder `pipeline/output/pipeline_stage2_finetune/` by default. Copy it to the folder `ckpt` by running `cp pipeline/output/pipeline_stage2_finetune/the_remaining_path ckpt/with_gnn_node_feat.pth`. 
 
 Now we launch the `demo.py` in our original environment. Make sure you have run `conda activate drugchat`. Then, start the demo [demo.sh](demo.sh) on your local machine by running `bash demo.sh`. Then, open the URL created by the demo and try it out!
 
