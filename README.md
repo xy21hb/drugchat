@@ -23,7 +23,7 @@ The file data/ChEMBL_QA.json and data/PubChem_QA.json contains data for the ChEM
 
 {SMILES String: [ [Question1 , Answer1], [Question2 , Answer2]... ] }
 
-## Disclaimer.  
+## Disclaimer
 
 This is a prototype system that has not been systematically and comprehensively validated by pharmaceutical experts yet. Please use with caution. 
 
