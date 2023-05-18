@@ -74,6 +74,8 @@ python dataset/smiles2graph_demo.py
 ```
 Then, the `smiles2graph_demo.py` will be running in the backend to serve the `demo.py`.
 
+Find the checkpoint you obtain from the training process above, which is located under the folder `pipeline/output/pipeline_stage2_finetune/`. Copy it to the folder `ckpt` by running `cp pipeline/output/pipeline_stage2_finetune/the_remaining_path ckpt/with_gnn_node_feat.pth`.
+
 Now we launch the `demo.py` in our original environment. Make sure you have run `conda activate drugchat`. Then, start the demo [demo.sh](demo.sh) on your local machine by running `bash demo.sh`. Then, open the URL created by the demo and try it out!
 
 

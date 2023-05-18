@@ -7,7 +7,7 @@ model:
   end_sym: "###"
   prompt_path: "prompts/alignment.txt"
   prompt_template: '###Human: {} ###Assistant: '
-  ckpt: 'ckpt/with_gnn_node_feat.pth'
+  ckpt: ""
   use_graph_agg: False  # whether to use graph aggregated embedding or node embedding
 
 
