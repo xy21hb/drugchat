@@ -2,6 +2,7 @@
 
 This repository holds the code of DrugChat: Towards Enabling ChatGPT-Like Capabilities on Drug Molecule Graphs.
 
+
 ## Examples
 
 ![demo1](figs/examples/demo.png) 
@@ -21,3 +22,4 @@ This repository holds the code of DrugChat: Towards Enabling ChatGPT-Like Capabi
 The file data/ChEMBL_QA.json and data/PubChem_QA.json contains data for the ChEMBL Drug QA Dataset and the PubChem Drug QA Dataset. The data structure is as follows. 
 
 {SMILES String: [ [Question1 , Answer1], [Question2 , Answer2]... ] }
+
