@@ -39,6 +39,11 @@ conda env create -f environment.yml
 conda activate drugchat
 ```
 
+Verify the installation of `torch` and `torchvision` is successful by running `python -c "import torchvision; print(torchvision.__version__)"`. If it outputs the version number without warnning or error, then you can go to the next step (installing PyTorch Geometric). __If it outputs any error__, try to uninstall `torch` by `conda uninstall pytorch torchvision torchaudio cudatoolkit` and then reinstall them following [here](https://pytorch.org/get-started/previous-versions/#v1121). You need to find the correct command according to the CUDA version your GPU driver supports (check `nvidia-smi`). For example, I found my GPU driver supported CUDA 11.6, so I run `conda install pytorch==1.12.1 torchvision==0.13.1 torchaudio==0.12.1 cudatoolkit=11.6 -c pytorch -c conda-forge`.
+
+### Installing PyTorch Geometric
+Run `conda install pyg=2.3.0 pytorch-scatter=2.1.0 -c pyg` to install PyTorch Geometric. If some error related to PyTorch Geometric or pytorch-scatter show up later when running the code, try to follow [here](https://pytorch-geometric.readthedocs.io/en/latest/install/installation.html) to reinstall them. 
+
 
 **2. Prepare the pretrained Vicuna weights**
 
@@ -60,12 +65,16 @@ Then, set the path to the vicuna weight in the model config file
 [here](pipeline/configs/models/drugchat.yaml#L16) at Line 16.
 
 ### Training
+**You need roughly 40 GB GPU memory for the training.** 
+
 The training configuration file is [train_configs/drugchat_stage2_finetune.yaml](train_configs/drugchat_stage2_finetune.yaml). You may want to change the number of epochs and other hyper-parameters there, such as `max_epoch`, `init_lr`, `min_lr`,`warmup_steps`, `batch_size_train`. You need to adjust `iters_per_epoch` so that `iters_per_epoch` * `batch_size_train` = your training set size.
 
 Start training the projection layer that connects the GNN output and the LLaMA model by running `bash finetune_gnn.sh`. 
 
 ### Inference by Launching Demo Locally
 **To get the inference to work properly, you need to create another environment (`rdkit`) and launch a backend process which converts SMILES strings to Torch Geometric graphs.**
+
+**It takes around 24 GB GPU memory for the demo.**
 
 To create the `rdkit` environment and run the process, run
 ```
