@@ -1,7 +1,8 @@
 # DrugChat: Towards Enabling ChatGPT-Like Capabilities on Drug Molecule Graphs
 
-This repository holds the code of DrugChat: Towards Enabling ChatGPT-Like Capabilities on Drug Molecule Graphs.
+This repository holds the code and data of DrugChat: Towards Enabling ChatGPT-Like Capabilities on Drug Molecule Graphs.
 
+## [Technical Report](drugchat.pdf) 
 
 ## Examples
 
@@ -117,6 +118,5 @@ If you're using DrugChat in your research or applications, please cite using thi
 @article{liang2023drugchat,
   title={DrugChat: Towards Enabling ChatGPT-Like Capabilities on Drug Molecule Graphs},
   author={Liang, Youwei and Zhang, Ruiyi and Zhang, li and Xie, Pengtao},
-  journal={arXiv preprint arXiv:xxxx.xxxxx},
   year={2023}
 }
