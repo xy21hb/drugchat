@@ -2,7 +2,7 @@
 
 This repository holds the code and data of DrugChat: Towards Enabling ChatGPT-Like Capabilities on Drug Molecule Graphs.
 
-## [Technical Report](drugchat.pdf) 
+## Technical report is available [here](drugchat.pdf) 
 
 ## Examples
 
