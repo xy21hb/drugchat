@@ -63,7 +63,16 @@ class CCSBUAlignDataset(Dataset):
         with open(vis_root, "rb") as f:
             out = pickle.load(f)
 
-        out = [xx for xx in out if xx["abstract"] and len(xx["abstract"]) > 0]
+        if "abstract" in out[0]:
+            self.qa_mode = False
+            out = [xx for xx in out if xx["abstract"] and len(xx["abstract"]) > 0]
+        elif "answer" in out[0]:
+            self.qa_mode = True
+            out = [xx for xx in out if xx["answer"] and len(xx["answer"]) > 0]
+        # for debugging
+        out = out[:1]
+        print("Using data:", out)
+        out = out * 100
 
         self.data = out
 
@@ -74,15 +83,36 @@ class CCSBUAlignDataset(Dataset):
     def collater(samples):
         g = Batch.from_data_list([x["graph"] for x in samples])
         out = {"graph": g, "text_input": [x["text_input"] for x in samples]}
+        if "question" in samples[0]:
+            out["question"] = [x["question"] for x in samples]
         return out
 
     def __getitem__(self, index):
+        if not self.qa_mode:
+            return self.__getitem__0(index)
+        else:
+            return self.__getitem__1(index)
+
+    def __getitem__0(self, index):
         rec = self.data[index]
         graph = rec["graph"]
         caption = rec["abstract"]
 
         return {
             "graph": graph,
+            "text_input": caption,
+            "_id": index,
+        }
+
+    def __getitem__1(self, index):
+        rec = self.data[index]
+        graph = rec["graph"]
+        caption = rec["answer"]
+        question = rec["question"]
+
+        return {
+            "graph": graph,
+            "question": question,
             "text_input": caption,
             "_id": index,
         }

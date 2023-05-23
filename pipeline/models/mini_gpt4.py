@@ -161,9 +161,9 @@ class MiniGPT4(BaseModel):
         device = graph.x.device
 
         img_embeds, atts_img = self.encode_img(graph)
-        if hasattr(samples, 'question_split'):  # VQA dataset
-            print('VQA Batch')
-            vqa_prompt = '###Human: <compound><compoundHere></compound> '
+        if 'question' in samples:
+            assert len(samples['question']) == 1, "not supporting batch mode yet"
+            vqa_prompt = '###Human: <compound><compoundHere></compound> ' + samples['question'][0]
             img_embeds, atts_img = self.prompt_wrap(img_embeds, atts_img, vqa_prompt)
         elif self.prompt_list:
             prompt = random.choice(self.prompt_list)
