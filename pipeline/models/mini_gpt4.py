@@ -13,6 +13,21 @@ from transformers import LlamaTokenizer
 from pipeline.models.gnn import GNN
 import contextlib
 from pipeline.models.base_model import BaseModel
+from transformers import StoppingCriteria, StoppingCriteriaList
+
+
+class StoppingCriteriaSub(StoppingCriteria):
+
+    def __init__(self, stops=[], encounters=1):
+        super().__init__()
+        self.stops = stops
+
+    def __call__(self, input_ids: torch.LongTensor, scores: torch.FloatTensor):
+        for stop in self.stops:
+            if torch.all((stop == input_ids[0][-len(stop):])).item():
+                return True
+
+        return False
 
 
 @registry.register_model("mini_gpt4")
@@ -203,6 +218,8 @@ class MiniGPT4(BaseModel):
         img_embeds = img_embeds.to(dtype=bos_embeds.dtype)
         inputs_embeds = torch.cat([bos_embeds, img_embeds, to_regress_embeds], dim=1)
         attention_mask = torch.cat([atts_bos, atts_img, to_regress_tokens.attention_mask], dim=1)
+        # embs = torch.cat([bos_embeds, img_embeds], dim=1)
+        # tt = self.gen_(embs)
 
         with self.maybe_autocast():
             outputs = self.llama_model(
@@ -214,6 +231,35 @@ class MiniGPT4(BaseModel):
         loss = outputs.loss
 
         return {"loss": loss}
+
+    def gen_(self, embs):
+        """
+        Generate text.
+        """
+        stop_words_ids = [torch.tensor([835]).to(embs.device),
+                          torch.tensor([2277, 29937]).to(embs.device)]  # '###' can be encoded in two different ways.
+        stopping_criteria = StoppingCriteriaList([StoppingCriteriaSub(stops=stop_words_ids)])
+        outputs = self.llama_model.generate(
+            inputs_embeds=embs,
+            max_new_tokens=300,
+            stopping_criteria=stopping_criteria,
+            num_beams=1,
+            do_sample=False,
+            min_length=1,
+            top_p=0.9,
+            repetition_penalty=1.,
+            length_penalty=1.,
+            temperature=1,
+        )
+        output_token = outputs[0]
+        if output_token[0] == 0:  # the model might output a unknow token <unk> at the beginning. remove it
+            output_token = output_token[1:]
+        if output_token[0] == 1:  # some users find that there is a start token <s> at the beginning. remove it
+            output_token = output_token[1:]
+        output_text = self.llama_tokenizer.decode(output_token, add_special_tokens=False)
+        output_text = output_text.split('###')[0]  # remove the stop sign '###'
+        output_text = output_text.split('Assistant:')[-1].strip()
+        return output_text
 
     def maybe_autocast(self, dtype=torch.float16):
         # if on cpu, don't use autocast

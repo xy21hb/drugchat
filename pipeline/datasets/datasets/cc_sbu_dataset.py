@@ -69,10 +69,6 @@ class CCSBUAlignDataset(Dataset):
         elif "answer" in out[0]:
             self.qa_mode = True
             out = [xx for xx in out if xx["answer"] and len(xx["answer"]) > 0]
-        # for debugging
-        out = out[:1]
-        print("Using data:", out)
-        out = out * 100
 
         self.data = out
 

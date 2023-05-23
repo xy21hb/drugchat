@@ -109,8 +109,7 @@ class StoppingCriteriaSub(StoppingCriteria):
 
 
 CONV_VISION = Conversation(
-    system="You are an expert in drug discovery. "
-           "Please answer my questions.",
+    system="",
     roles=("Human", "Assistant"),
     messages=[],
     offset=2,
@@ -154,7 +153,7 @@ class Chat:
             max_new_tokens=max_new_tokens,
             stopping_criteria=self.stopping_criteria,
             num_beams=num_beams,
-            do_sample=True,
+            do_sample=False,
             min_length=min_length,
             top_p=top_p,
             repetition_penalty=repetition_penalty,

@@ -53,6 +53,7 @@ def setup_seeds(config):
 print('Initializing Chat')
 args = parse_args()
 cfg = Config(args)
+use_amp = cfg.run_cfg.get("amp", False)
 
 model_config = cfg.model_cfg
 model_config.device_8bit = args.gpu_id
@@ -78,12 +79,14 @@ def gradio_reset(chat_state, img_list):
         img_list = []
     return None, gr.update(value=None, interactive=True), gr.update(placeholder='Please input your SMILES string first', interactive=False),gr.update(value="Input SMILES & Start Chat", interactive=True), chat_state, img_list
 
+@torch.no_grad()
 def upload_img(gr_img, text_input, chat_state):
     if gr_img is None:
         return None, None, gr.update(interactive=True), chat_state, None
     chat_state = CONV_VISION.copy()
     img_list = []
-    llm_message = chat.upload_img(gr_img, chat_state, img_list)
+    with torch.cuda.amp.autocast(use_amp):
+        llm_message = chat.upload_img(gr_img, chat_state, img_list)
     return gr.update(interactive=False), gr.update(interactive=True, placeholder='Type and press Enter'), gr.update(value="Start Chatting", interactive=False), chat_state, img_list
 
 def gradio_ask(user_message, chatbot, chat_state):
@@ -94,13 +97,15 @@ def gradio_ask(user_message, chatbot, chat_state):
     return '', chatbot, chat_state
 
 
+@torch.no_grad()
 def gradio_answer(chatbot, chat_state, img_list, num_beams, temperature):
-    llm_message = chat.answer(conv=chat_state,
-                              img_list=img_list,
-                              num_beams=num_beams,
-                              temperature=temperature,
-                              max_new_tokens=300,
-                              max_length=2000)[0]
+    with torch.cuda.amp.autocast(use_amp):
+        llm_message = chat.answer(conv=chat_state,
+                                img_list=img_list,
+                                num_beams=num_beams,
+                                temperature=temperature,
+                                max_new_tokens=300,
+                                max_length=2000)[0]
     chatbot[-1][1] = llm_message
     return chatbot, chat_state, img_list
 

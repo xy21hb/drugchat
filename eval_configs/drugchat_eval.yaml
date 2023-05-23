@@ -5,7 +5,7 @@ model:
   freeze_qformer: True
   max_txt_len: 160
   end_sym: "###"
-  low_resource: True
+  low_resource: False  # for reproducibility
   prompt_path: "prompts/alignment.txt"
   prompt_template: '###Human: {} ###Assistant: '
   ckpt: 'ckpt/with_gnn_node_feat.pth'
@@ -24,3 +24,5 @@ datasets:
 
 run:
   task: image_text_pretrain
+
+  amp: True  # for reproducibility
