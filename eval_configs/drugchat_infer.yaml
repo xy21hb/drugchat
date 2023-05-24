@@ -1,0 +1,28 @@
+model:
+  arch: mini_gpt4
+  model_type: pretrain_vicuna
+  freeze_vit: True
+  freeze_qformer: True
+  max_txt_len: 160
+  end_sym: "###"
+  low_resource: True  # for reproducibility
+  prompt_path: "prompts/alignment.txt"
+  prompt_template: '###Human: {} ###Assistant: '
+  ckpt: 'pipeline/output/pipeline_stage2_finetune/20230522185/checkpoint_2.pth'
+  use_graph_agg: True  # whether to use graph aggregated embedding or node embedding
+
+
+datasets:
+  cc_sbu_align:
+    vis_processor:
+      train:
+        name: "blip2_image_eval"
+        image_size: 224
+    text_processor:
+      train:
+        name: "blip_caption"
+
+run:
+  task: image_text_pretrain
+
+  amp: True  # for reproducibility
