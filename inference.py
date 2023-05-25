@@ -2,6 +2,8 @@ import argparse
 import json
 import random
 import copy
+import time
+import tqdm
 
 import numpy as np
 import torch
@@ -112,31 +114,41 @@ def gradio_answer(chatbot, chat_state, img_list, num_beams, temperature):
 
 def infer(smiles, questions):
     
-    chatbot = []
+    chat = []
     chat_state, img_list = upload_img(smiles)
     
     for text_input in questions:
-        text_input, chatbot, chat_state = gradio_ask(text_input, chatbot, chat_state)
-        chatbot, chat_state, img_list = gradio_answer(chatbot, chat_state, img_list, args.num_beams, args.temperature)
+        chatbot = []
+        chat_state_ = copy.deepcopy(chat_state)
+        text_input, chatbot, chat_state_ = gradio_ask(text_input, chatbot, chat_state_)
+        chatbot, chat_state_, img_list_ = gradio_answer(chatbot, chat_state_, img_list, args.num_beams, args.temperature)
+        chat.extend(chatbot)
 
-    return chatbot
+    return chat
 
 
 def infer_chembl_QA():
     with open("./data/ChEMBL_QA_test.json", "rt") as f:
         js = json.load(f)
     out = {}
-    for smi, rec in js.items():
+    for smi, rec in tqdm.tqdm(js.items()):
+        t0 = time.time()
+
         smi_ = copy.copy(smi)
         questions = [question for question, answer in rec]
+        answers = [answer for question, answer in rec]
         qa_pairs = infer(smi, questions)
+        assert len(qa_pairs) == len(answers)
+        for ans, qa in zip(answers, qa_pairs):
+            qa.insert(1, ans)
         out[smi_] = qa_pairs
-        if len(out) > 5:
-            break
-        print(smi_, qa_pairs)
+        # print(smi_, "============ used time:", time.time() - t0)
 
-    with open("./data/ChEMBL_QA_test_inference.json", "wt") as f:
-        json.dump(out, f)
+        for qa in qa_pairs:
+            print(qa)
+
+        with open("./data/ChEMBL_QA_test_inference.json", "wt") as f:
+            json.dump(out, f)
 
 
 infer_chembl_QA()
